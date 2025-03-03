@@ -1,6 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QCheckBox
 from PyQt5.QtGui import QIcon
+from PyQt5.QtCore import Qt
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -11,6 +12,7 @@ class MainWindow(QMainWindow):
         self.button1 = QPushButton("Home", self)
         self.button2 = QPushButton("Create", self)
         self.button3 = QPushButton("Import", self)
+        self.checkDarkMode = QCheckBox("Dark Mode", self)
         self.initUI()
 
     def initUI(self):
@@ -29,6 +31,12 @@ class MainWindow(QMainWindow):
         self.button3.setGeometry(400, 0, 200, 100)
         self.button3.setStyleSheet("font-size: 30px;")
         self.button3.clicked.connect(self.button3_clicked)
+
+        #darkmode button setup
+
+        self.checkDarkMode.setGeometry(700, 0, 100, 50)
+        self.checkDarkMode.setStyleSheet("font-size: 12px;")
+
 
     def button1_clicked(self):
         print("Button 1 clicked")
