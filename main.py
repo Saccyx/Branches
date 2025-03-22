@@ -3,6 +3,54 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QChe
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
 
+class HomeWindow(QWidget):
+    def __init__(self):
+        
+        super().__init__()
+        self.setWindowTitle("Home Window")
+        self.setGeometry(200, 200, 400, 300)  
+        self.setWindowIcon(QIcon("Planet_Logo.png"))    
+        layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
+        layout = QVBoxLayout()
+        label = QLabel("Welcome to the Home Window!")
+        label.setStyleSheet("font-size: 20px; padding: 10px;")
+        layout.addWidget(label)
+
+        self.setLayout(layout)
+
+class ImportWindow(QWidget):
+    def __init__(self):
+        
+        super().__init__()
+        self.setWindowTitle("Import Project")
+        self.setGeometry(200, 200, 400, 300)  
+        self.setWindowIcon(QIcon("Planet_Logo.png"))    
+        layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
+        layout = QVBoxLayout()
+        label = QLabel("Welcome to the Import Window!")
+        label.setStyleSheet("font-size: 20px; padding: 10px;")
+        layout.addWidget(label)
+
+        self.setLayout(layout)
+
+
+class CreateWindow(QWidget):
+    def __init__(self):
+        
+        super().__init__()
+        self.setWindowTitle("Create New Project")
+        self.setGeometry(200, 200, 400, 300)  
+        self.setWindowIcon(QIcon("Planet_Logo.png"))    
+        layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
+        layout = QVBoxLayout()
+        label = QLabel("Welcome to the Create Window!")
+        label.setStyleSheet("font-size: 20px; padding: 10px;")
+        layout.addWidget(label)
+
+        self.setLayout(layout)
 
 
 
