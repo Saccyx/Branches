@@ -1,8 +1,11 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QCheckBox, QWidget, QVBoxLayout, QHBoxLayout
+import os
+from PyQt5.QtWidgets import (
+    QApplication, QMainWindow, QPushButton, QLabel, QCheckBox, QWidget, 
+    QVBoxLayout, QHBoxLayout, QToolBar, QAction
+)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
-import os
 
 ICON_PATH = "Planet_Logo.png"
 
@@ -28,9 +31,45 @@ class ImportWindow(BaseWindow):
     def __init__(self):
         super().__init__("Import Project", "Welcome to the Import Window!")
 
-class CreateWindow(BaseWindow):
+class CreateWindow(QMainWindow):  # Changed to QMainWindow to support a taskbar
     def __init__(self):
-        super().__init__("Create New Project", "Welcome to the Create Window!")
+        super().__init__()
+        self.setWindowTitle("Create New Project")
+        self.setGeometry(200, 200, 400, 300)
+        if os.path.exists(ICON_PATH):
+            self.setWindowIcon(QIcon(ICON_PATH))
+
+        # Central Widget
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+
+        layout = QVBoxLayout()
+        label = QLabel("Welcome to the Create Window!")
+        label.setStyleSheet("font-size: 20px; padding: 10px;")
+        layout.addWidget(label)
+
+        self.central_widget.setLayout(layout)
+
+        # Taskbar (Toolbar)
+        self.toolbar = QToolBar("Taskbar")
+        self.addToolBar(Qt.TopToolBarArea, self.toolbar)
+
+        # Adding actions to the taskbar
+        self.add_taskbar_actions()
+
+    def add_taskbar_actions(self):
+        new_action = QAction(QIcon("new_icon.png"), "New", self)
+        open_action = QAction(QIcon("open_icon.png"), "Open", self)
+        save_action = QAction(QIcon("save_icon.png"), "Save", self)
+        exit_action = QAction(QIcon("exit_icon.png"), "Exit", self)
+        
+        exit_action.triggered.connect(self.close)
+
+        self.toolbar.addAction(new_action)
+        self.toolbar.addAction(open_action)
+        self.toolbar.addAction(save_action)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(exit_action)
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -71,6 +110,27 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(self.checkDarkMode)
         layout.addLayout(button_layout)
         central_widget.setLayout(layout)
+
+        # Taskbar (Toolbar)
+        self.toolbar = QToolBar("Taskbar")
+        self.addToolBar(Qt.TopToolBarArea, self.toolbar)
+
+        # Adding actions to the taskbar
+        self.add_taskbar_actions()
+
+    def add_taskbar_actions(self):
+        new_action = QAction(QIcon("new_icon.png"), "New", self)
+        open_action = QAction(QIcon("open_icon.png"), "Open", self)
+        save_action = QAction(QIcon("save_icon.png"), "Save", self)
+        exit_action = QAction(QIcon("exit_icon.png"), "Exit", self)
+
+        exit_action.triggered.connect(self.close)
+
+        self.toolbar.addAction(new_action)
+        self.toolbar.addAction(open_action)
+        self.toolbar.addAction(save_action)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(exit_action)
 
     def open_window(self, window_class):
         window_name = window_class.__name__
