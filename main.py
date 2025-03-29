@@ -2,64 +2,46 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QCheckBox, QWidget, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt
+import os
 
-class HomeWindow(QWidget):
-    def __init__(self):
-        
+ICON_PATH = "Planet_Logo.png"
+
+class BaseWindow(QWidget):
+    def __init__(self, title, message):
         super().__init__()
-        self.setWindowTitle("Home Window")
-        self.setGeometry(200, 200, 400, 300)  
-        self.setWindowIcon(QIcon("Planet_Logo.png"))    
+        self.setWindowTitle(title)
+        self.setGeometry(200, 200, 400, 300)
+        if os.path.exists(ICON_PATH):
+            self.setWindowIcon(QIcon(ICON_PATH))
+
         layout = QVBoxLayout()
-        button_layout = QHBoxLayout()
-        layout = QVBoxLayout()
-        label = QLabel("Welcome to the Home Window!")
+        label = QLabel(message)
         label.setStyleSheet("font-size: 20px; padding: 10px;")
         layout.addWidget(label)
-
         self.setLayout(layout)
 
-class ImportWindow(QWidget):
+class HomeWindow(BaseWindow):
     def __init__(self):
-        
-        super().__init__()
-        self.setWindowTitle("Import Project")
-        self.setGeometry(200, 200, 400, 300)  
-        self.setWindowIcon(QIcon("Planet_Logo.png"))    
-        layout = QVBoxLayout()
-        button_layout = QHBoxLayout()
-        layout = QVBoxLayout()
-        label = QLabel("Welcome to the Import Window!")
-        label.setStyleSheet("font-size: 20px; padding: 10px;")
-        layout.addWidget(label)
+        super().__init__("Home Window", "Welcome to the Home Window!")
 
-        self.setLayout(layout)
-
-
-class CreateWindow(QWidget):
+class ImportWindow(BaseWindow):
     def __init__(self):
-        
-        super().__init__()
-        self.setWindowTitle("Create New Project")
-        self.setGeometry(200, 200, 400, 300)  
-        self.setWindowIcon(QIcon("Planet_Logo.png"))    
-        layout = QVBoxLayout()
-        button_layout = QHBoxLayout()
-        layout = QVBoxLayout()
-        label = QLabel("Welcome to the Create Window!")
-        label.setStyleSheet("font-size: 20px; padding: 10px;")
-        layout.addWidget(label)
+        super().__init__("Import Project", "Welcome to the Import Window!")
 
-        self.setLayout(layout)
-
-
+class CreateWindow(BaseWindow):
+    def __init__(self):
+        super().__init__("Create New Project", "Welcome to the Create Window!")
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Branches")
         self.setGeometry(100, 100, 800, 600)
-        self.setWindowIcon(QIcon("Planet_Logo.png"))
+        if os.path.exists(ICON_PATH):
+            self.setWindowIcon(QIcon(ICON_PATH))
+
+        # Store references to sub-windows
+        self.windows = {}
 
         # Create central widget and layout
         central_widget = QWidget()
@@ -68,57 +50,42 @@ class MainWindow(QMainWindow):
         layout = QVBoxLayout()
         button_layout = QHBoxLayout()
 
-        # Homepage button setup
-        self.button1 = QPushButton("Home")
-        self.button1.setStyleSheet("font-size: 30px;")
-        self.button1.clicked.connect(self.button1_clicked)
+        # Buttons
+        self.buttons = {
+            "Home": HomeWindow,
+            "Create": CreateWindow,
+            "Import": ImportWindow
+        }
 
-        # Create button setup
-        self.button2 = QPushButton("Create")
-        self.button2.setStyleSheet("font-size: 30px;")
-        self.button2.clicked.connect(self.button2_clicked)
-
-        # Import button setup
-        self.button3 = QPushButton("Import")
-        self.button3.setStyleSheet("font-size: 30px;")
-        self.button3.clicked.connect(self.button3_clicked)
+        for name, window_class in self.buttons.items():
+            button = QPushButton(name)
+            button.setStyleSheet("font-size: 30px;")
+            button.clicked.connect(lambda checked, w=window_class: self.open_window(w))
+            button_layout.addWidget(button)
 
         # Dark Mode checkbox
         self.checkDarkMode = QCheckBox("Dark Mode")
         self.checkDarkMode.setStyleSheet("font-size: 20px; padding: 10px;")
         self.checkDarkMode.stateChanged.connect(self.toggle_dark_mode)
 
-        # Add widgets to layout
-        button_layout.addWidget(self.button1)
-        button_layout.addWidget(self.button2)
-        button_layout.addWidget(self.button3)
         button_layout.addWidget(self.checkDarkMode)
-
         layout.addLayout(button_layout)
         central_widget.setLayout(layout)
 
-    def button1_clicked(self):
-        print("Button 1 clicked")
-        self.window = HomeWindow()
-        self.window.show()
-
-    def button2_clicked(self):
-        print("Button 2 clicked")
-        self.window = CreateWindow()
-        self.window.show()
-
-    def button3_clicked(self):
-        print("Button 3 clicked")
-        self.window = ImportWindow()
-        self.window.show()
+    def open_window(self, window_class):
+        window_name = window_class.__name__
+        if window_name not in self.windows or not self.windows[window_name].isVisible():
+            self.windows[window_name] = window_class()
+            self.windows[window_name].show()
 
     def toggle_dark_mode(self, state):
         if state == Qt.Checked:
-            self.setStyleSheet("background-color: #333; color: white;")
+            app.setStyleSheet("background-color: #333; color: white;")
         else:
-            self.setStyleSheet("")
+            app.setStyleSheet("")
 
 def main():
+    global app
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
