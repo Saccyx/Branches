@@ -1,5 +1,6 @@
 import sys
 import os
+import pickle
 from Base_Branch import Base_Branch
 
 from PyQt5.QtWidgets import (
@@ -20,6 +21,7 @@ class CreateWindow(QWidget):
         self.setWindowTitle("Create Window")
         self.setGeometry(600, 300, 300, 250)
         self.base_branch_instance = None 
+        self.saved_branches = []  
 
         # Input field
         self.input_field = QLineEdit()
@@ -39,11 +41,19 @@ class CreateWindow(QWidget):
         self.New_Story_Button.setStyleSheet("background-color: lightgreen; font-size: 16px;")
         self.New_Story_Button.clicked.connect(self.handle_new_story)
 
+        # Export Button
+        self.Export_Button = QPushButton("Export Branches")
+        self.Export_Button.setFixedSize(200, 50)
+        self.Export_Button.setStyleSheet("background-color: lightcoral; font-size: 16px;")
+        self.Export_Button.clicked.connect(self.handle_export)
+
+
         # Layout
         layout = QVBoxLayout()
         layout.addWidget(self.input_field, alignment=Qt.AlignCenter)
         layout.addWidget(self.Add_Branch_Button, alignment=Qt.AlignCenter)
         layout.addWidget(self.New_Story_Button, alignment=Qt.AlignCenter)
+        layout.addWidget(self.Export_Button, alignment=Qt.AlignCenter)
         self.setLayout(layout)
 
     def handle_add_branch(self):
@@ -57,17 +67,29 @@ class CreateWindow(QWidget):
             return
 
         self.base_branch_instance.edit_add(text_to_add)
+        self.input_field.clear()
+
 
        
 
     def handle_new_story(self):
-       branch_name = self.input_field.text().strip()
-       if not branch_name:
+        branch_name = self.input_field.text().strip()
+        if not branch_name:
             print("Branch name is empty. Please enter a name.")
             return
-       self.base_branch_instance = Base_Branch(name=branch_name, type="story scene")
-       print(f"Created Base_Branch: name={self.base_branch_instance.name}, type={self.base_branch_instance.type}")
+        self.base_branch_instance = Base_Branch(name=branch_name, type="story scene")
+        self.saved_branches.append(self.base_branch_instance)
+        print(f"Created Base_Branch: name={self.base_branch_instance.name}, type={self.base_branch_instance.type}")
+        self.input_field.clear()
 
+    def handle_export(self):
+        if not self.saved_branches:
+            print("No branches to export.")
+            return
+
+        with open("branches.pkl", "wb") as f:
+            pickle.dump(self.saved_branches, f)
+            print(f"Exported {len(self.saved_branches)} branches to 'branches.pkl'")
 
 
         
