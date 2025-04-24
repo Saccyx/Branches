@@ -1,6 +1,7 @@
 import sys
 import os
-import Base_Branch
+from Base_Branch import Base_Branch
+
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QPushButton, QLabel, QCheckBox, QWidget, 
     QVBoxLayout, QHBoxLayout, QToolBar, QAction,QLineEdit, QComboBox, QTableWidget, QTableWidgetItem, QGridLayout, QFrame
@@ -18,6 +19,7 @@ class CreateWindow(QWidget):
         super().__init__()
         self.setWindowTitle("Create Window")
         self.setGeometry(600, 300, 300, 250)
+        self.base_branch_instance = None 
 
         # Input field
         self.input_field = QLineEdit()
@@ -45,11 +47,26 @@ class CreateWindow(QWidget):
         self.setLayout(layout)
 
     def handle_add_branch(self):
-        branch_name = self.input_field.text()
-        print(f"Branch name entered: {branch_name}")
+        if self.base_branch_instance is None:
+            print("No story exists. Please create a story first.")
+            return
+
+        text_to_add = self.input_field.text().strip()
+        if not text_to_add:
+            print("No text entered. Please enter dialogue to add.")
+            return
+
+        self.base_branch_instance.edit_add(text_to_add)
+
+       
 
     def handle_new_story(self):
-        print("New story button clicked")
+       branch_name = self.input_field.text().strip()
+       if not branch_name:
+            print("Branch name is empty. Please enter a name.")
+            return
+       self.base_branch_instance = Base_Branch(name=branch_name, type="story scene")
+       print(f"Created Base_Branch: name={self.base_branch_instance.name}, type={self.base_branch_instance.type}")
 
 
 
