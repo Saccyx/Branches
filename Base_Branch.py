@@ -1,13 +1,15 @@
-import Branch.py
+class Branch:
+    def __init__(self, name="Main", type="story scene"):
+        self.name = name
+        self.type = type
+        self.choices = []  # Could be list of Branches or choices (strings/actions)
 
 class Base_Branch:
     def __init__(self, name, type):
         self.name = name
         self.type = type
         self.dialogue = []
-        self.story = Branch()
-
-
+        self.story = []  # Store multiple branches
 
     def edit_add(self, text):
         self.dialogue.append(text)
@@ -19,7 +21,7 @@ class Base_Branch:
             print(f"Removed dialogue: {removed}")
         else:
             print("Index out of range. No dialogue removed.")
-        
+
     def edit_replace(self, index, text):
         if 0 <= index < len(self.dialogue):
             old_text = self.dialogue[index]
@@ -27,7 +29,7 @@ class Base_Branch:
             print(f"Replaced dialogue at index {index}: {old_text} with {text}")
         else:
             print("Index out of range. No dialogue replaced.")
-    
+
     def edit_clear(self):
         self.dialogue.clear()
         print("Cleared all dialogue.")
@@ -35,4 +37,4 @@ class Base_Branch:
     def add_branch(self, name, type):
         branch = Branch(name, type)
         self.story.append(branch)
-        
+        print(f"Added new branch: {branch.name} of type {branch.type}")

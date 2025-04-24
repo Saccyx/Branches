@@ -1,7 +1,6 @@
 import sys
 import os
 import Base_Branch
-import Branch
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QPushButton, QLabel, QCheckBox, QWidget, 
     QVBoxLayout, QHBoxLayout, QToolBar, QAction,QLineEdit, QComboBox, QTableWidget, QTableWidgetItem, QGridLayout, QFrame
@@ -11,6 +10,9 @@ from PyQt5.QtCore import Qt
 
 ICON_PATH = "Planet_Logo.png"
 
+
+
+
 class CreateWindow(QWidget):
     def __init__(self):
         super().__init__()
@@ -19,7 +21,7 @@ class CreateWindow(QWidget):
 
         # Input field
         self.input_field = QLineEdit()
-        self.input_field.setPlaceholderText("Enter branch name")
+        self.input_field.setPlaceholderText("Enter text")
         self.input_field.setFixedSize(200, 30)
         self.input_field.setStyleSheet("font-size: 14px;")
 
